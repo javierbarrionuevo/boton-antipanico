@@ -1,8 +1,12 @@
 const express = require('express');
 
-const alertRoutes = require('./routes/alert.routes.js');
+const alertRoutes = require('./routes/alert.routes');
 
 const app = express();
+
+const alertRoutes = require('./routes/alert.routes.js');
+
+console.log("Cargando rutas de alerts...");
 
 app.use(express.json());
 
