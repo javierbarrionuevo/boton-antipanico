@@ -20,3 +20,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
+const { sendAlert } = require('./services/telegram.service');
+
+sendAlert(process.env.TEST_CHAT_ID, "🧪 TEST DESDE RENDER");
