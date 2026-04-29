@@ -1,0 +1,20 @@
+const express = require('express');
+
+const alertRoutes = require('./routes/alert.routes');
+
+const app = express();
+
+app.use(express.json());
+
+app.use('/api/alerts', alertRoutes);
+
+app.get('/', (req, res) => {
+  res.send('API funcionando');
+});
+
+// 👇 CLAVE PARA RENDER
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Servidor corriendo en puerto ${PORT}`);
+});
