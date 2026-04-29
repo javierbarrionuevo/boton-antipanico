@@ -1,6 +1,6 @@
 const express = require('express');
 
-const alertRoutes = require('./routes/alert.routes');
+const alertRoutes = require('./routes/alert.routes.js');
 
 const app = express();
 
