@@ -1,7 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { handleAlert } = require('../controllers/alert.controller');
 
-router.post('/', handleAlert);
+router.get('/', (req, res) => {
+  console.log("🚨 BOTÓN PRESIONADO");
+  res.send("OK");
+});
 
 module.exports = router;
