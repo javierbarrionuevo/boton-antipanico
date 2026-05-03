@@ -2,14 +2,14 @@ const TelegramBot = require('node-telegram-bot-api');
 
 const bot = new TelegramBot(process.env.TELEGRAM_TOKEN);
 
-// configurar webhook (una vez al iniciar)
+// webhook
 const url = `https://boton-antipanico.onrender.com/bot${process.env.TELEGRAM_TOKEN}`;
 
 bot.setWebHook(url)
   .then(() => console.log("🌐 Webhook configurado"))
-  .catch(err => console.error("❌ Error webhook:", err));
+  .catch(err => console.error(err));
 
-// lógica de vinculación
+// /start
 bot.onText(/\/start (.+)/, (msg, match) => {
   const chatId = msg.chat.id;
   const deviceId = match[1];
@@ -22,14 +22,18 @@ bot.onText(/\/start (.+)/, (msg, match) => {
   bot.sendMessage(chatId, `✅ Dispositivo ${deviceId} vinculado`);
 });
 
-// enviar alerta
+// 🔥 ESTE ES EL IMPORTANTE
 function sendAlert(chatId, message) {
   if (!chatId) {
     console.log("❌ chatId undefined");
     return;
   }
 
-  bot.sendMessage(chatId, message);
+  console.log("📲 Enviando alerta a:", chatId);
+
+  bot.sendMessage(chatId, message)
+    .then(() => console.log("✅ Mensaje enviado"))
+    .catch(err => console.log("❌ Error Telegram:", err.message));
 }
 
 module.exports = { bot, sendAlert };
