@@ -1,34 +1,28 @@
 const TelegramBot = require('node-telegram-bot-api');
 
-let bot;
+const bot = new TelegramBot(process.env.TELEGRAM_TOKEN);
 
-if (!global.telegramBot) {
-  console.log("🤖 Inicializando bot de Telegram...");
+// configurar webhook (una vez al iniciar)
+const url = `https://boton-antipanico.onrender.com/bot${process.env.TELEGRAM_TOKEN}`;
 
-  bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
-    polling: true
-  });
+bot.setWebHook(url)
+  .then(() => console.log("🌐 Webhook configurado"))
+  .catch(err => console.error("❌ Error webhook:", err));
 
-  global.telegramBot = bot;
+// lógica de vinculación
+bot.onText(/\/start (.+)/, (msg, match) => {
+  const chatId = msg.chat.id;
+  const deviceId = match[1];
 
-  // manejar /start
-  bot.onText(/\/start (.+)/, (msg, match) => {
-    const chatId = msg.chat.id;
-    const deviceId = match[1];
+  console.log(`Vinculando ${deviceId} con ${chatId}`);
 
-    console.log(`Vinculando ${deviceId} con ${chatId}`);
+  const { linkDevice } = require('./device.service');
+  linkDevice(deviceId, chatId);
 
-    const { linkDevice } = require('./device.service');
-    linkDevice(deviceId, chatId);
+  bot.sendMessage(chatId, `✅ Dispositivo ${deviceId} vinculado`);
+});
 
-    bot.sendMessage(chatId, `✅ Dispositivo ${deviceId} vinculado`);
-  });
-
-} else {
-  bot = global.telegramBot;
-}
-
-// función para enviar mensajes
+// enviar alerta
 function sendAlert(chatId, message) {
   if (!chatId) {
     console.log("❌ chatId undefined");
@@ -38,4 +32,4 @@ function sendAlert(chatId, message) {
   bot.sendMessage(chatId, message);
 }
 
-module.exports = { sendAlert };
+module.exports = { bot, sendAlert };
