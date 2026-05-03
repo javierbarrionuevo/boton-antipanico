@@ -1,24 +1,40 @@
 const TelegramBot = require('node-telegram-bot-api');
-const { linkDevice } = require('./device.service');
 
-const bot = new TelegramBot(process.env.TELEGRAM_TOKEN, { polling: true });
+let bot;
 
-// cuando alguien escribe /start
-bot.onText(/\/start (.+)/, (msg, match) => {
-  const chatId = msg.chat.id;
-  const deviceId = match[1];
+if (!global.telegramBot) {
+  console.log("🤖 Inicializando bot de Telegram...");
 
-  console.log(`Vinculando ${deviceId} con ${chatId}`);
+  bot = new TelegramBot(process.env.TELEGRAM_TOKEN, {
+    polling: true
+  });
 
-  // guardar relación
-  linkDevice(deviceId, chatId);
+  global.telegramBot = bot;
 
-  // responder al usuario
-  bot.sendMessage(chatId, `✅ Dispositivo ${deviceId} vinculado correctamente`);
-});
+  // manejar /start
+  bot.onText(/\/start (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const deviceId = match[1];
 
-// enviar alerta
+    console.log(`Vinculando ${deviceId} con ${chatId}`);
+
+    const { linkDevice } = require('./device.service');
+    linkDevice(deviceId, chatId);
+
+    bot.sendMessage(chatId, `✅ Dispositivo ${deviceId} vinculado`);
+  });
+
+} else {
+  bot = global.telegramBot;
+}
+
+// función para enviar mensajes
 function sendAlert(chatId, message) {
+  if (!chatId) {
+    console.log("❌ chatId undefined");
+    return;
+  }
+
   bot.sendMessage(chatId, message);
 }
 
