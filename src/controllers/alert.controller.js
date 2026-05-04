@@ -8,12 +8,14 @@ exports.createAlert = (req, res) => {
 
   const chatId = getChatIdByDevice(device_id);
 
+  console.log("📲 chatId encontrado:", chatId);
+
   if (!chatId) {
     console.log("❌ No hay usuario vinculado");
     return res.status(404).json({ error: "Dispositivo no vinculado" });
   }
 
-  console.log("📲 Enviando a:", chatId);
+  console.log("📲 Enviando alerta a:", chatId);
 
   sendAlert(chatId, `🚨 ALERTA del dispositivo ${device_id}`);
 
