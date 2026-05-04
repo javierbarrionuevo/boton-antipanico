@@ -1,19 +1,16 @@
-// "base de datos" en memoria (temporal)
-const devices = {
-  "ABC123": "123456789" // device_id → chat_id
-};
+const devices = {};
 
-// obtener chat_id desde device_id
-function getChatIdByDevice(device_id) {
-  return devices[device_id];
-}
-
-// vincular dispositivo a usuario
 function linkDevice(device_id, chat_id) {
+  console.log("💾 Guardando:", device_id, chat_id);
   devices[device_id] = chat_id;
 }
 
+function getChatIdByDevice(device_id) {
+  console.log("🔍 Buscando:", device_id, devices);
+  return devices[device_id];
+}
+
 module.exports = {
-  getChatIdByDevice,
-  linkDevice
+  linkDevice,
+  getChatIdByDevice
 };
