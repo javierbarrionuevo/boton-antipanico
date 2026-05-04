@@ -1,12 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  const { device_id } = req.body;
+const { createAlert } = require('../controllers/alert.controller');
 
-  console.log('Alerta de:', device_id);
-
-  res.json({ ok: true });
-});
+router.post('/', createAlert);
 
 module.exports = router;
