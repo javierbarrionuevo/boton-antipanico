@@ -1,3 +1,7 @@
+const connectDB = require('./database/mongo');
+
+connectDB();
+
 const express = require('express');
 const app = express();
 
