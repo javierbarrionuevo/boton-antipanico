@@ -1,13 +1,14 @@
-const devices = {};
+const deviceRepo = require('../repositories/device.repository');
 
-function linkDevice(device_id, chat_id) {
-  console.log("💾 Guardando:", device_id, chat_id);
-  devices[device_id] = chat_id;
+async function linkDevice(deviceId, chatId) {
+  console.log("💾 Guardando en DB:", deviceId, chatId);
+  await deviceRepo.saveDevice(deviceId, chatId);
 }
 
-function getChatIdByDevice(device_id) {
-  console.log("🔍 Buscando:", device_id, devices);
-  return devices[device_id];
+async function getChatIdByDevice(deviceId) {
+  const chatId = await deviceRepo.findChatId(deviceId);
+  console.log("🔍 DB result:", chatId);
+  return chatId;
 }
 
 module.exports = {
