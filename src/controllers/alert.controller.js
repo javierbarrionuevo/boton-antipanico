@@ -6,8 +6,10 @@ exports.createAlert = (req, res) => {
 
   console.log("Alerta de:", device_id);
 
+  // 🔍 BUSCAR USUARIO
   const chatId = getChatIdByDevice(device_id);
 
+  console.log("🔍 Buscando:", device_id);
   console.log("📲 chatId encontrado:", chatId);
 
   if (!chatId) {
@@ -17,6 +19,7 @@ exports.createAlert = (req, res) => {
 
   console.log("📲 Enviando alerta a:", chatId);
 
+  // 📲 ENVIAR TELEGRAM
   sendAlert(chatId, `🚨 ALERTA del dispositivo ${device_id}`);
 
   res.json({ ok: true });
