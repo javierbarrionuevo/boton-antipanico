@@ -1,5 +1,6 @@
 const { getChatIdByDevice } = require('../services/device.service');
 const { sendAlert } = require('../services/telegram.service');
+const { createAlertRecord } = require('../services/alert.service');
 
 exports.createAlert = async (req, res) => {
   const { device_id } = req.body;
@@ -8,13 +9,17 @@ exports.createAlert = async (req, res) => {
 
   const chatId = await getChatIdByDevice(device_id);
 
-  console.log("📲 chatId encontrado:", chatId);
-
   if (!chatId) {
     return res.status(404).json({ error: "No vinculado" });
   }
 
-  await sendAlert(chatId, `🚨 ALERTA del dispositivo ${device_id}`);
+  const message = `🚨 ALERTA del dispositivo ${device_id}`;
+
+  // 📲 enviar telegram
+  await sendAlert(chatId, message);
+
+  // 💾 guardar en Mongo
+  await createAlertRecord(device_id, chatId, message);
 
   res.json({ ok: true });
 };
